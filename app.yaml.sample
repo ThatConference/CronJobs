@@ -1,0 +1,8 @@
+runtime: nodejs
+env: flex
+
+env_variables:
+  SLACK_URL: https://hooks.slack.com/services/[TOKEN]
+  TITO_API_TOKEN: [TOKEN]
+  TITO_API_HOST: api.tito.io
+  TITO_API_PATH: /v2/that-conference/[EVENT]/releases

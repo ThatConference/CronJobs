@@ -1,0 +1,26 @@
+{
+  "name": "CronJobs",
+  "version": "0.0.1",
+  "description": "That Conference Cron Jobs",
+  "main": "server.js",
+  "author": "Clark Sell",
+  "license": "Apache V2",
+  "engines": {
+    "node": ">=6.5"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "hapi": "^16.1.0",
+    "request": "^2.81.0",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "standard": "^9.0.1",
+    "tap": "^10.3.0"
+  },
+  "scripts": {
+    "start": "node ./server.js",
+    "pretest": "standard",
+    "test": "tap tests/**/*.js"
+  }
+}
