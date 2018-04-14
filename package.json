@@ -1,12 +1,12 @@
 {
-  "name": "CronJobs",
+  "name": "cronjobs",
   "version": "0.0.1",
   "description": "That Conference Cron Jobs",
   "main": "server.js",
   "author": "Clark Sell",
   "license": "Apache V2",
   "engines": {
-    "node": ">=6.5"
+    "node": ">=8.5"
   },
   "dependencies": {
     "dotenv": "^4.0.0",

@@ -1,0 +1,20 @@
+
+version: '3'
+
+services:
+  cron-jobs:
+    container_name: cron-jobs
+    image: thatconference/cron-jobs:dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    environment: 
+      PORT: 80
+      NODE_ENV: DEVELOPMENT
+    ports:
+      - 8080:80
+    volumes:
+      - .:/usr/src/app
+    command: sh -c "node ./src/server.js"
+
