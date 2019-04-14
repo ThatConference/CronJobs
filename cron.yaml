@@ -1,5 +1,0 @@
-cron:
-- description: "daily tito update"
-  url: /tito/daily
-  schedule: every day 08:00
-  timezone: America/Chicago

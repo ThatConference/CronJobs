@@ -1,38 +1,40 @@
-const Winston = require('winston')
+const Winston = require("winston");
 
-let logger = new (Winston.Logger)({
+const logLevels = {
   levels: {
-    trace: 0,
-    input: 1,
-    verbose: 2,
-    prompt: 3,
-    debug: 4,
-    info: 5,
-    data: 6,
-    help: 7,
-    warn: 8,
-    error: 9
+    error: 0,
+    warn: 1,
+    info: 2,
+    data: 3,
+    trace: 4,
+    debug: 5,
+    verbose: 6
   },
   colors: {
-    trace: 'magenta',
-    input: 'grey',
-    verbose: 'cyan',
-    prompt: 'grey',
-    debug: 'blue',
-    info: 'green',
-    data: 'grey',
-    help: 'cyan',
-    warn: 'yellow',
-    error: 'red'
+    error: "red",
+    warn: "yellow",
+    info: "green",
+    data: "grey",
+    trace: "magenta",
+    debug: "blue",
+    verbose: "cyan"
   }
-})
+};
 
-logger.add(Winston.transports.Console, {
-  level: 'info',
-  prettyPrint: true,
-  colorize: true,
-  silent: false,
-  timestamp: true
-})
+const transportProviders = [new Winston.transports.Console()];
 
-module.exports = logger
+const logger = Winston.createLogger({
+  levels: logLevels.levels,
+  level: process.env.LOG_LEVEL || "verbose",
+  format: Winston.format.combine(
+    Winston.format.splat(),
+    Winston.format.label({ label: "CRON_JOBS" }),
+    Winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:SS" }),
+    Winston.format.printf(
+      info => `[${info.label}] ${info.timestamp} ${info.level}: ${info.message}`
+    )
+  ),
+  transports: transportProviders
+});
+
+module.exports = logger;

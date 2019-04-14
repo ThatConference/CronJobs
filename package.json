@@ -1,26 +1,25 @@
 {
   "name": "cronjobs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "That Conference Cron Jobs",
-  "main": "server.js",
+  "main": "./src/server.js",
   "author": "Clark Sell",
   "license": "Apache V2",
   "engines": {
-    "node": ">=8.5"
+    "node": ">=10"
   },
   "dependencies": {
-    "dotenv": "^4.0.0",
-    "hapi": "^16.1.0",
-    "request": "^2.81.0",
-    "winston": "^2.3.1"
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "node-fetch": "^2.3.0",
+    "request": "^2.88.0",
+    "winston": "^3.2.1"
   },
-  "devDependencies": {
-    "standard": "^9.0.1",
-    "tap": "^10.3.0"
-  },
+  "devDependencies": {},
   "scripts": {
-    "start": "node ./server.js",
-    "pretest": "standard",
-    "test": "tap tests/**/*.js"
+    "start": "node ./src/server.js"
   }
 }

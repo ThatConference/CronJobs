@@ -1,104 +1,112 @@
-const Request = require('request')
+const Request = require("request");
+const _ = require("lodash");
 
-const SLACK_URL = process.env.SLACK_URL
-console.log(`SLACK_URL: ${SLACK_URL}`)
+const SLACK_URL = process.env.SLACK_URL;
+console.log(`SLACK_URL: ${SLACK_URL}`);
 
 const headers = {
-    'Content-Type': 'application/json'
-}
+  "Content-Type": "application/json"
+};
 
 const options = {
-    url: SLACK_URL,
-    method: 'POST',
-    headers: headers,
-}
+  uri: SLACK_URL,
+  method: "POST",
+  headers: headers
+};
 
 const postPayload = {
-  channel: '#core-team',
-  username: 'titoBot',
-  icon_emoji: ':ghost:'
-}
+  channel: "#everybody",
+  username: "titoBot",
+  icon_emoji: ":ghost:"
+};
 
-exports.message = (tickets) => {
-  console.log(`Session Updated Message Called`)
-
-  const slackMessage = buildSlackMessage(tickets)
-  const payload = Object.assign({}, slackMessage, postPayload)
-  const reqOpts = Object.assign({ body: JSON.stringify(payload) }, options)
-
-  console.log(`Formatted Slack Message: \n ${JSON.stringify(payload)}`)
-
-  Request(reqOpts)
-}
-
-const buildSlackMessage = (tickets) => {
-
-  let slackMessage = {
-    text: `:tada: today's ti.to ticket count!!!
-    \r\n
-    Total Professionals: ${tickets.totals.professionals}
-    Total Family: ${tickets.totals.family}
-    Total Sponsors: ${tickets.totals.sponsors}
-    Total Counselors: ${tickets.totals.counselors}
-    Total: ${tickets.totals.total}`,
-    attachments: []
-  }
-
-  //let's build each attachments
-  for (ticket of tickets.tickets) {
-    let attachment = {
-      fallback: slackMessage.text,
-      color: whatColor(ticket.ticket),
-      author_name: ticket.ticket,
-      text: ticket.count,
-    }
-
-    slackMessage.attachments.push(attachment)
-  }
-
-  return slackMessage
-}
-
-const whatColor = (ticketType) => {
+const whatColor = ticketType => {
   const colors = {
-      speaker: '#3666a6',
-      camper: '#36a64f',
-      spouse: '#a436a6',
-      kid: '#ebe815',
-      sponsor: '#ff0000'
-  }
+    speaker: "#3666a6",
+    camper: "#36a64f",
+    spouse: "#a436a6",
+    kid: "#ebe815",
+    sponsor: "#ff0000",
+    pig: "#ff0000"
+  };
 
   let color = colors.camper;
 
   switch (ticketType) {
-    case 'Counselor':
-      color = colors.speaker
-      break
-
-    case 'Sponsored Counselor':
-      color = colors.speaker
-      break
-
-    case 'Family Access - Adult':
-      color = colors.spouse
-      break
-
-    case 'Invoiced Family Access - Adult':
-      color = colors.spouse
-      break
-
-    case 'Family Access - Child':
-      color = colors.kid
-      break
-
-    case 'Invoiced Family Access - Child':
-      color = colors.kid
-      break
-
-    case 'Sponsor (Expo Hall Only)':
-      color = colors.sponsor
-      break
+    case "THAT Counselor (Tues - Thurs)":
+      color = colors.speaker;
+      break;
+    case "THAT 4 Day Everything (Mon - Thurs)":
+      color = colors.camper;
+      break;
+    case "THAT Pre-Conference (Mon)":
+      color = colors.camper;
+      break;
+    case "THAT 3 Day Camper (Tue - Thu)":
+      color = colors.camper;
+      break;
+    case "THAT Campmate/Adult (Tues - Thurs)":
+      color = colors.spouse;
+      break;
+    case "THAT Geekling/Child (Tues - Thurs)":
+      color = colors.kid;
+      break;
+    case "THAT Pig Roast":
+      color = colors.pig;
+      break;
+    case "THAT Sponsor (Expo Hall Only)":
+      color = colors.sponsor;
+      break;
+    case "THAT Sponsor Counselor":
+      color = colors.speaker;
+      break;
+    case "THAT Give Camp (Sun - Mon)":
+      color = colors.camper;
+      break;
+    case "THAT 3 Day Camper NO FOOD (Tues - Thurs)":
+      color = colors.camper;
+      break;
+    case "THAT Counselor Bundle":
+      color = colors.speaker;
+      break;
   }
 
-  return color
-}
+  return color;
+};
+
+const buildSlackMessage = ({ overallTotal, tickets }) => {
+  let slackMessage = {
+    text: `:tada: today's ti.to ticket count!!!
+    \r\n
+    Overall Ticket Count: ${overallTotal}`,
+    attachments: []
+  };
+
+  //let's build each attachments
+  for (t of tickets) {
+    let attachment = {
+      fallback: slackMessage.text,
+      color: whatColor(t.ticket),
+      author_name: t.ticket,
+      text: t.count
+    };
+
+    slackMessage.attachments.push(attachment);
+  }
+
+  return slackMessage;
+};
+
+exports.message = tickets => {
+  console.log(`[CRON JOBS] Tito Daily Message Called`);
+
+  const slackMessage = buildSlackMessage(tickets);
+  const payload = Object.assign({}, slackMessage, postPayload);
+  const reqOpts = Object.assign({ body: JSON.stringify(payload) }, options);
+
+  // console.log(
+  //   `[CRON JOBS] Formatted Slack Message: \n ${JSON.stringify(payload)}`
+  // );
+
+  return Request(reqOpts);
+};

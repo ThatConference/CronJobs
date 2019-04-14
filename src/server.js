@@ -1,31 +1,21 @@
-require('dotenv').config()
+require("dotenv").config();
 
-const Hapi = require('hapi')
-const logger = require('./utility/logger')
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const express = require("express");
+const logger = require("./utility/logger");
 
-const server = new Hapi.Server()
-const port = Number(process.env.PORT || 8000)
-server.connection({
-  port: port
-})
+const routes = require("./api");
 
-server.route(require('./routes')())
+const app = express();
+const port = Number(process.env.PORT || 8000);
 
-exports.listen = () => {
-  server.start((err) => {
-    if (err) {
-      logger.error(`Http server start error: ${err}`)
-      throw err
-    }
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use("*", cors());
 
-    logger.info(`Http server listening on http://localhost:${port}`)
-  })
-}
+routes(app);
 
-exports.close = (next) => {
-  server.stop(next)
-}
-
-if (require.main === module) {
-  exports.listen()
-}
+app.listen(port, () => {
+  logger.info(`Http server listening on http://localhost:${port}`);
+});
