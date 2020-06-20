@@ -69,6 +69,18 @@ const whatColor = ticketType => {
     case "THAT Counselor Bundle":
       color = colors.speaker;
       break;
+    case "Camper":
+      color = colors.camper;
+      break;
+    case "Patron Camper":
+      color = colors.camper;
+      break;
+    case "Partner":
+      color = colors.sponsor;
+      break;
+    case "Corporate Partner":
+      color = colors.sponsor;
+      break
   }
 
   return color;
